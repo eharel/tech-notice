@@ -206,10 +206,14 @@
   setInterval(tick, 1000);
 
   const fsBtn = document.getElementById('fsBtn');
-  fsBtn.addEventListener('click', () => {
+  function enterFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
     }
+  }
+  fsBtn.addEventListener('click', enterFullscreen);
+  document.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 'f') enterFullscreen();
   });
   document.addEventListener('fullscreenchange', () => {
     fsBtn.style.display = document.fullscreenElement ? 'none' : '';
