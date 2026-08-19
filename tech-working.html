@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do Not Use — Technician Working</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #17130d;
+    --caution: #f5b301;
+    --caution-dark: #d99b00;
+    --paper: #fff8e6;
+    --dim: #8a7a55;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--ink);
+    overflow: hidden;
+  }
+
+  body {
+    font-family: 'IBM Plex Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+  }
+
+  /* hazard stripe frame — the signature element */
+  .frame {
+    position: fixed;
+    inset: 0;
+    padding: 22px;
+    background: repeating-linear-gradient(
+      135deg,
+      var(--caution) 0px,
+      var(--caution) 26px,
+      var(--ink) 26px,
+      var(--ink) 52px
+    );
+  }
+
+  .stage {
+    position: absolute;
+    inset: 22px;
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4vw;
+  }
+
+  .eyebrow {
+    font-size: clamp(0.85rem, 1.6vw, 1.2rem);
+    letter-spacing: 0.35em;
+    color: var(--caution);
+    text-transform: uppercase;
+    margin-bottom: 1.4vw;
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+  }
+
+  .dot {
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    background: var(--caution);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.75); }
+  }
+
+  h1 {
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 400;
+    color: var(--paper);
+    font-size: clamp(2.6rem, 8.5vw, 7.5rem);
+    line-height: 1.02;
+    margin: 0;
+    text-transform: uppercase;
+    max-width: 90vw;
+  }
+
+  h1 span {
+    color: var(--caution);
+  }
+
+  .sub {
+    margin-top: 2.2vw;
+    color: var(--dim);
+    font-size: clamp(0.95rem, 1.6vw, 1.35rem);
+    max-width: 40em;
+    line-height: 1.5;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 26px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3vw;
+    color: var(--dim);
+    font-size: clamp(0.75rem, 1.1vw, 0.95rem);
+    letter-spacing: 0.05em;
+  }
+
+  #clock {
+    color: var(--caution-dark);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fs-btn {
+    position: absolute;
+    top: 34px;
+    right: 34px;
+    background: transparent;
+    border: 1px solid var(--dim);
+    color: var(--dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.6em 1em;
+    border-radius: 3px;
+    cursor: pointer;
+    opacity: 0.55;
+    transition: opacity 0.2s, border-color 0.2s, color 0.2s;
+  }
+
+  .fs-btn:hover {
+    opacity: 1;
+    border-color: var(--caution);
+    color: var(--caution);
+  }
+
+  .fs-btn:focus-visible,
+  h1:focus-visible {
+    outline: 2px solid var(--caution);
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .frame { padding: 12px; }
+    .stage { inset: 12px; }
+    .footer { flex-direction: column; gap: 0.6em; bottom: 18px; }
+    .fs-btn { top: 16px; right: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dot { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="stage">
+    <button class="fs-btn" id="fsBtn" type="button">Full screen</button>
+
+    <div class="eyebrow"><span class="dot"></span> In progress</div>
+    <h1 tabindex="0">Do not use<br><span>technician working</span></h1>
+    <p class="sub">This device is being serviced. Please don't close this window, sign in, or power it off — check back once the work is finished.</p>
+
+    <div class="footer">
+      <span>Reimage / setup in progress</span>
+      <span id="clock"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  function tick() {
+    const now = new Date();
+    const el = document.getElementById('clock');
+    el.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  const fsBtn = document.getElementById('fsBtn');
+  fsBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+      fsBtn.textContent = 'Exit full screen';
+    } else {
+      document.exitFullscreen();
+      fsBtn.textContent = 'Full screen';
+    }
+  });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen';
+  });
+</script>
+
+</body>
+</html>
