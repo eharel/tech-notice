@@ -200,14 +200,10 @@
   fsBtn.addEventListener('click', () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
-      fsBtn.textContent = 'Exit full screen';
-    } else {
-      document.exitFullscreen();
-      fsBtn.textContent = 'Full screen';
     }
   });
   document.addEventListener('fullscreenchange', () => {
-    fsBtn.textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen';
+    fsBtn.style.display = document.fullscreenElement ? 'none' : '';
   });
 </script>
 
