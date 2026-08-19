@@ -202,6 +202,8 @@
     if (document.visibilityState === 'visible') requestWakeLock();
   });
 
+  const startTime = Date.now();
+
   function tick() {
     const now = new Date();
     document.getElementById('clock').textContent =
