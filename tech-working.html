@@ -183,16 +183,24 @@
 
     <div class="footer">
       <span>Reimage / setup in progress</span>
-      <span id="clock"></span>
+      <span><span id="elapsed"></span> elapsed &middot; <span id="clock"></span></span>
     </div>
   </div>
 </div>
 
 <script>
+  const startTime = Date.now();
+
   function tick() {
     const now = new Date();
-    const el = document.getElementById('clock');
-    el.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    document.getElementById('clock').textContent =
+      now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    const diff = Math.floor((Date.now() - startTime) / 1000);
+    const h = String(Math.floor(diff / 3600)).padStart(2, '0');
+    const m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+    const s = String(diff % 60).padStart(2, '0');
+    document.getElementById('elapsed').textContent = `${h}:${m}:${s}`;
   }
   tick();
   setInterval(tick, 1000);
