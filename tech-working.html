@@ -189,7 +189,18 @@
 </div>
 
 <script>
-  const startTime = Date.now();
+  let wakeLock = null;
+  async function requestWakeLock() {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+    } catch (err) {
+      // Wake Lock not supported or denied — silently ignore, page still works
+    }
+  }
+  requestWakeLock();
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') requestWakeLock();
+  });
 
   function tick() {
     const now = new Date();
