@@ -15,6 +15,10 @@
     --caution-dark: #d99b00;
     --paper: #fff8e6;
     --dim: #8a7a55;
+    --alert: #c31f37;
+    --alert-deep: #8e0f22;
+    --panel: #1f1a12;
+    --field: #0f0c08;
   }
 
   * { box-sizing: border-box; }
@@ -61,6 +65,7 @@
     justify-content: center;
     text-align: center;
     padding: 4vw;
+    overflow: hidden;
   }
 
   .eyebrow {
@@ -110,6 +115,17 @@
     line-height: 1.5;
   }
 
+  /* contact line — only rendered when a name or number is configured */
+  .contact {
+    display: none;
+    margin: 1.8vw 0 0;
+    color: var(--caution);
+    font-size: clamp(0.95rem, 1.7vw, 1.4rem);
+    letter-spacing: 0.04em;
+  }
+
+  .contact.on { display: block; }
+
   .footer {
     position: absolute;
     bottom: 26px;
@@ -129,45 +145,329 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .fs-btn {
+  /* corner hint — spelled out while you set the machine up, then it
+     collapses to the '?' so there's still a way in for the next tech */
+  .corner {
     position: absolute;
-    top: 34px;
-    right: 34px;
-    background: transparent;
-    border: 1px solid var(--dim);
+    top: 28px;
+    right: 30px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .boot-hint {
+    color: var(--dim);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 1.5s ease-out;
+  }
+
+  .boot-hint b { color: var(--caution-dark); font-weight: 600; }
+
+  .boot-hint.gone { opacity: 0; }
+
+  .help-dot {
+    background: none;
+    border: none;
     color: var(--dim);
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.6em 1em;
-    border-radius: 3px;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.25em 0.4em;
     cursor: pointer;
-    opacity: 0.55;
-    transition: opacity 0.2s, border-color 0.2s, color 0.2s;
+    opacity: 0.3;
+    transition: opacity 0.2s, color 0.2s;
   }
 
-  .fs-btn:hover {
+  .help-dot:hover { opacity: 1; color: var(--caution); }
+
+  .help-dot:focus-visible {
+    outline: 2px solid var(--caution);
+    outline-offset: 2px;
     opacity: 1;
-    border-color: var(--caution);
-    color: var(--caution);
   }
 
-  .fs-btn:focus-visible,
   h1:focus-visible {
     outline: 2px solid var(--caution);
     outline-offset: 4px;
+  }
+
+  /* hands-off warning — covers the stage when the machine is touched */
+  .alert {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    background: var(--alert);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4vw;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.12s ease-out, visibility 0s linear 0.12s;
+  }
+
+  .alert.on {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.08s ease-out;
+    animation: alertFlash 0.9s ease-in-out infinite alternate;
+  }
+
+  @keyframes alertFlash {
+    from { background: var(--alert); }
+    to { background: var(--alert-deep); }
+  }
+
+  .alert h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 400;
+    margin: 0;
+    color: var(--paper);
+    font-size: clamp(2.4rem, 9vw, 7.5rem);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .alert .why {
+    margin: 2.2vw 0 0;
+    color: rgba(255, 248, 230, 0.85);
+    font-size: clamp(0.95rem, 1.8vw, 1.5rem);
+    line-height: 1.5;
+    max-width: 32em;
+  }
+
+  .alert .who {
+    display: none;
+    margin: 1.6vw 0 0;
+    color: var(--paper);
+    font-weight: 600;
+    font-size: clamp(0.95rem, 1.7vw, 1.4rem);
+    letter-spacing: 0.04em;
+  }
+
+  .alert .who.on { display: block; }
+
+  /* ---- config panel (C) ---- */
+  .config {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 4vh 4vw;
+    background: rgba(10, 8, 5, 0.92);
+  }
+
+  .config.on { display: flex; }
+
+  .card {
+    width: min(34rem, 100%);
+    margin: auto;
+    background: var(--panel);
+    border: 1px solid rgba(245, 179, 1, 0.35);
+    border-radius: 6px;
+    padding: 1.8rem;
+    text-align: left;
+  }
+
+  .card h3 {
+    margin: 0 0 0.35rem;
+    color: var(--paper);
+    font-size: 1rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .card > p.lede {
+    margin: 0 0 1.4rem;
+    color: var(--dim);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .card label {
+    display: block;
+    margin-bottom: 1.1rem;
+    color: var(--caution);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .card .opt {
+    color: var(--dim);
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+
+  .card input {
+    display: block;
+    width: 100%;
+    margin-top: 0.5rem;
+    background: var(--field);
+    border: 1px solid #3a3226;
+    border-radius: 3px;
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.95rem;
+    letter-spacing: normal;
+    text-transform: none;
+    padding: 0.6em 0.7em;
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  .card input:focus {
+    outline: none;
+    border-color: var(--caution);
+  }
+
+  .card input::placeholder { color: #5c5240; }
+
+  .phone {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+    background: var(--field);
+    border: 1px solid #3a3226;
+    border-radius: 3px;
+    padding-left: 0.7em;
+  }
+
+  .phone:focus-within { border-color: var(--caution); }
+
+  .phone .prefix {
+    color: var(--dim);
+    font-size: 0.95rem;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  .phone input {
+    margin-top: 0;
+    border: none;
+    background: transparent;
+    padding-left: 0.25em;
+    letter-spacing: 0.15em;
+  }
+
+  .link-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    margin: 1.4rem 0 0.6rem;
+  }
+
+  .link-row input {
+    margin-top: 0;
+    font-size: 0.78rem;
+    color: var(--dim);
+  }
+
+  .card .hint {
+    margin: 0 0 1.4rem;
+    color: var(--dim);
+    font-size: 0.72rem;
+    line-height: 1.6;
+  }
+
+  .card .hint b { color: var(--caution); }
+
+  .card .hint a { color: var(--caution); }
+
+  .keys {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1rem;
+    align-items: baseline;
+    margin: 0 0 1.4rem;
+  }
+
+  .keys dt { text-align: right; }
+
+  .keys dt b {
+    display: inline-block;
+    min-width: 2.1em;
+    text-align: center;
+    background: var(--caution);
+    color: var(--ink);
+    border-radius: 3px;
+    padding: 0.1em 0.5em;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .keys dd {
+    margin: 0;
+    color: var(--paper);
+    font-size: 0.85rem;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+  }
+
+  a.btn { text-decoration: none; line-height: normal; }
+
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.7em 1.2em;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 1px solid var(--dim);
+    background: transparent;
+    color: var(--dim);
+    white-space: nowrap;
+  }
+
+  .btn:hover { border-color: var(--caution); color: var(--caution); }
+
+  .btn.primary {
+    background: var(--caution);
+    border-color: var(--caution);
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .btn.primary:hover { background: var(--caution-dark); color: var(--ink); }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--caution);
+    outline-offset: 2px;
   }
 
   @media (max-width: 640px) {
     .frame { padding: 12px; }
     .stage { inset: 12px; }
     .footer { flex-direction: column; gap: 0.6em; bottom: 18px; }
-    .fs-btn { top: 16px; right: 16px; }
+    .corner { top: 12px; right: 12px; }
+    .boot-hint { font-size: 0.62rem; }
+    .card { padding: 1.2rem; }
+    .link-row { flex-direction: column; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .dot { animation: none; }
+    .alert.on { animation: none; }
   }
 </style>
 </head>
@@ -175,20 +475,117 @@
 
 <div class="frame">
   <div class="stage">
-    <button class="fs-btn" id="fsBtn" type="button">Full screen</button>
+    <div class="corner">
+      <span class="boot-hint" id="bootHint"><b>C</b> settings &middot; <b>F</b> full screen &middot;</span>
+      <button class="help-dot" id="helpDot" type="button" aria-label="Keyboard shortcuts">?</button>
+    </div>
 
     <div class="eyebrow"><span class="dot"></span> In progress</div>
     <h1 tabindex="0">Do not use<br><span>technician working</span></h1>
     <p class="sub">This device is being serviced. Please don't close this window, sign in, or power it off — check back once the work is finished.</p>
+    <p class="contact" id="contact"></p>
 
     <div class="footer">
-      <span>Reimage / setup in progress</span>
+      <span id="task">Reimage / setup in progress</span>
       <span><span id="elapsed"></span> elapsed &middot; <span id="clock"></span></span>
+    </div>
+
+    <div class="alert" id="alert" role="alert" aria-hidden="true">
+      <h2>Hands off</h2>
+      <p class="why">This computer is mid-service. Typing, clicking, or restarting it can break the install and start the job over.</p>
+      <p class="who" id="alertWho"></p>
+    </div>
+
+    <div class="config" id="help" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+      <div class="card">
+        <h3>Shortcuts</h3>
+        <p class="lede">This sign is keyboard-only — no buttons to clutter it up.</p>
+        <dl class="keys">
+          <dt><b>C</b></dt><dd>Settings — your name, number, and what you're working on</dd>
+          <dt><b>F</b></dt><dd>Full screen</dd>
+          <dt><b>?</b></dt><dd>This card</dd>
+          <dt><b>Esc</b></dt><dd>Close</dd>
+        </dl>
+        <p class="hint">Any other key — or a click — shows the hands-off warning. That's what it's there for.</p>
+        <div class="actions">
+          <a class="btn" href="index.html" target="_blank" rel="noopener">Full guide</a>
+          <button type="button" class="btn primary" id="helpClose">Got it</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="config" id="config" role="dialog" aria-modal="true" aria-label="Sign settings">
+      <form class="card" id="cfgForm" autocomplete="off">
+        <h3>Sign settings</h3>
+        <p class="lede">These live in the page's web address — apply, then bookmark the link to keep them.</p>
+
+        <label>Technician name
+          <input type="text" id="cfgTech" maxlength="60" placeholder="Your name">
+        </label>
+
+        <label>Extension
+          <div class="phone">
+            <span class="prefix">(970) 947-</span>
+            <input type="text" id="cfgExt" maxlength="4" inputmode="numeric" placeholder="0000">
+          </div>
+        </label>
+
+        <label>Different number <span class="opt">— optional, replaces the extension</span>
+          <input type="text" id="cfgFull" maxlength="40" placeholder="Cell, help desk, anything">
+        </label>
+
+        <label>Work being done
+          <input type="text" id="cfgTask" maxlength="80" placeholder="Reimage / setup in progress">
+        </label>
+
+        <div class="link-row">
+          <input type="text" id="cfgLink" readonly aria-label="Bookmarkable link">
+          <button type="button" class="btn" id="cfgCopy">Copy</button>
+        </div>
+        <p class="hint">Bookmark that link to keep these settings. Press <b>C</b> to reopen this panel, <b>F</b> for full screen, <b>?</b> for the <a href="index.html" target="_blank" rel="noopener">full docs</a>.</p>
+
+        <div class="actions">
+          <button type="button" class="btn" id="cfgCancel">Cancel</button>
+          <button type="submit" class="btn primary">Apply</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
 <script>
+  /* ---- settings live in the URL, so a bookmark carries them ----
+     ?tech=Eli%20Harel&contact=(970)%20947-4821&task=Windows%2011%20reimage   */
+  const DEFAULT_TASK = 'Reimage / setup in progress';
+  const EXT_PREFIX = '(970) 947-';
+
+  const els = {
+    task: document.getElementById('task'),
+    contact: document.getElementById('contact'),
+    alertWho: document.getElementById('alertWho')
+  };
+
+  let settings = readSettings();
+
+  function readSettings() {
+    const p = new URLSearchParams(location.search);
+    const val = (k) => (p.get(k) || '').trim().slice(0, 120);
+    return { tech: val('tech'), contact: val('contact'), task: val('task') };
+  }
+
+  function render() {
+    els.task.textContent = settings.task || DEFAULT_TASK;
+
+    const who = [settings.tech, settings.contact].filter(Boolean).join(' · ');
+    els.contact.textContent = who ? 'Need this machine? Contact ' + who : '';
+    els.contact.classList.toggle('on', !!who);
+    els.alertWho.textContent = who ? 'Contact ' + who : '';
+    els.alertWho.classList.toggle('on', !!who);
+  }
+
+  render();
+
+  /* ---- keep the screen awake ---- */
   let wakeLock = null;
   async function requestWakeLock() {
     try {
@@ -202,6 +599,7 @@
     if (document.visibilityState === 'visible') requestWakeLock();
   });
 
+  /* ---- clock + elapsed ---- */
   const startTime = Date.now();
 
   function tick() {
@@ -218,18 +616,187 @@
   tick();
   setInterval(tick, 1000);
 
-  const fsBtn = document.getElementById('fsBtn');
+  /* ---- full screen ---- */
   function enterFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
     }
   }
-  fsBtn.addEventListener('click', enterFullscreen);
-  document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'f') enterFullscreen();
+
+  /* ---- shortcut hint: fades once the machine is set up ---- */
+  const HINT_MS = 8000;
+  setTimeout(() => document.getElementById('bootHint').classList.add('gone'), HINT_MS);
+
+  /* ---- shortcut card (?) — in-page, since popups can be blocked ---- */
+  const helpEl = document.getElementById('help');
+
+  function openHelp() {
+    clearWarning();
+    closeConfig();
+    helpEl.classList.add('on');
+    document.getElementById('helpClose').focus();
+  }
+
+  function closeHelp() {
+    helpEl.classList.remove('on');
+  }
+
+  document.getElementById('helpClose').addEventListener('click', closeHelp);
+  helpEl.addEventListener('pointerdown', (e) => e.stopPropagation());
+
+  // the '?' in the corner is the only thing on the sign a tech can click
+  const helpDot = document.getElementById('helpDot');
+  helpDot.addEventListener('pointerdown', (e) => e.stopPropagation());
+  helpDot.addEventListener('click', () => { helpOpen() ? closeHelp() : openHelp(); });
+
+  /* ---- hands-off warning ---- */
+  const alertEl = document.getElementById('alert');
+  const ALERT_MS = 6000;
+  let alertTimer = null;
+
+  function warn() {
+    if (panelOpen()) return;
+    alertEl.classList.add('on');
+    alertEl.setAttribute('aria-hidden', 'false');
+    clearTimeout(alertTimer);
+    alertTimer = setTimeout(clearWarning, ALERT_MS);
+  }
+
+  function clearWarning() {
+    clearTimeout(alertTimer);
+    alertEl.classList.remove('on');
+    alertEl.setAttribute('aria-hidden', 'true');
+  }
+
+  document.addEventListener('pointerdown', warn);
+
+  /* ---- config panel ---- */
+  const cfg = {
+    panel: document.getElementById('config'),
+    form: document.getElementById('cfgForm'),
+    tech: document.getElementById('cfgTech'),
+    ext: document.getElementById('cfgExt'),
+    full: document.getElementById('cfgFull'),
+    task: document.getElementById('cfgTask'),
+    link: document.getElementById('cfgLink'),
+    copy: document.getElementById('cfgCopy'),
+    cancel: document.getElementById('cfgCancel')
+  };
+
+  const configOpen = () => cfg.panel.classList.contains('on');
+  const helpOpen = () => helpEl.classList.contains('on');
+  const panelOpen = () => configOpen() || helpOpen();
+
+  // an extension we wrote ourselves round-trips back into the 4-digit box;
+  // anything else is treated as a custom number
+  function splitContact(contact) {
+    const m = contact.match(/^\(970\) 947-(\d{4})$/);
+    return m ? { ext: m[1], full: '' } : { ext: '', full: contact };
+  }
+
+  function contactFromFields() {
+    const full = cfg.full.value.trim();
+    if (full) return full;
+    const ext = cfg.ext.value.replace(/\D/g, '');
+    return ext.length === 4 ? EXT_PREFIX + ext : '';
+  }
+
+  function urlFromFields() {
+    const p = new URLSearchParams();
+    const tech = cfg.tech.value.trim();
+    const contact = contactFromFields();
+    const task = cfg.task.value.trim();
+    if (tech) p.set('tech', tech);
+    if (contact) p.set('contact', contact);
+    if (task && task !== DEFAULT_TASK) p.set('task', task);
+    const qs = p.toString();
+    return location.origin + location.pathname + (qs ? '?' + qs : '');
+  }
+
+  function refreshLink() {
+    cfg.link.value = urlFromFields();
+    cfg.copy.textContent = 'Copy';
+  }
+
+  function openConfig() {
+    clearWarning();
+    closeHelp();
+    const { ext, full } = splitContact(settings.contact);
+    cfg.tech.value = settings.tech;
+    cfg.ext.value = ext;
+    cfg.full.value = full;
+    cfg.task.value = settings.task;
+    refreshLink();
+    cfg.panel.classList.add('on');
+    cfg.tech.focus();
+    cfg.tech.select();
+  }
+
+  function closeConfig() {
+    cfg.panel.classList.remove('on');
+  }
+
+  function applyConfig() {
+    settings = {
+      tech: cfg.tech.value.trim(),
+      contact: contactFromFields(),
+      task: cfg.task.value.trim()
+    };
+    render();
+    // put the settings in the address bar so Ctrl+D bookmarks them
+    try {
+      history.replaceState(null, '', urlFromFields());
+    } catch (err) {
+      // some contexts (file://) refuse replaceState — the Copy link still works
+    }
+    closeConfig();
+  }
+
+  cfg.cancel.addEventListener('click', closeConfig);
+  cfg.form.addEventListener('submit', (e) => { e.preventDefault(); applyConfig(); });
+  cfg.form.addEventListener('input', refreshLink);
+  cfg.ext.addEventListener('input', () => {
+    // only rewrite when something was actually rejected, so the caret stays put
+    const digits = cfg.ext.value.replace(/\D/g, '').slice(0, 4);
+    if (digits !== cfg.ext.value) cfg.ext.value = digits;
   });
-  document.addEventListener('fullscreenchange', () => {
-    fsBtn.style.display = document.fullscreenElement ? 'none' : '';
+
+  cfg.copy.addEventListener('click', async () => {
+    cfg.link.select();
+    try {
+      await navigator.clipboard.writeText(cfg.link.value);
+      cfg.copy.textContent = 'Copied';
+    } catch (err) {
+      cfg.copy.textContent = 'Press Ctrl+C';
+    }
+  });
+
+  // clicks inside the panel are the tech's, not a passer-by's
+  cfg.panel.addEventListener('pointerdown', (e) => e.stopPropagation());
+
+  /* ---- keyboard ---- */
+  document.addEventListener('keydown', (e) => {
+    const key = (e.key || '').toLowerCase();
+
+    if (configOpen()) {
+      if (key === 'escape') closeConfig();
+      return; // typing in the settings fields must not trip shortcuts or the warning
+    }
+
+    if (helpOpen() && key === 'escape') { closeHelp(); return; }
+    // otherwise fall through — the card lists C and F, so they have to work from it
+
+    // preventDefault so the shortcut key isn't typed into the panel it opens
+    if (key === 'c') { e.preventDefault(); openConfig(); return; }
+    if (key === 'f') { e.preventDefault(); enterFullscreen(); return; }
+    // '/' too, since '?' needs Shift and not every layout agrees where it lives
+    if (key === '?' || key === '/' || key === 'h') {
+      e.preventDefault();
+      helpOpen() ? closeHelp() : openHelp();
+      return;
+    }
+    if (key === 'escape' || key === 'f11') return;
+    warn(); // no-ops while the card is up
   });
 </script>
 

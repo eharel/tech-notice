@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Notice — Technician Guide</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2317130d'/%3E%3Crect x='14' y='6' width='4' height='14' rx='2' fill='%23f5b301'/%3E%3Ccircle cx='16' cy='24' r='2.6' fill='%23f5b301'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #17130d;
+    --caution: #f5b301;
+    --caution-dark: #d99b00;
+    --paper: #fff8e6;
+    --dim: #8a7a55;
+    --alert: #c31f37;
+    --panel: #1f1a12;
+    --rule: #332c20;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .stripe {
+    height: 14px;
+    background: repeating-linear-gradient(
+      135deg,
+      var(--caution) 0px,
+      var(--caution) 18px,
+      var(--ink) 18px,
+      var(--ink) 36px
+    );
+  }
+
+  .wrap {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 6rem;
+  }
+
+  header h1 {
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    line-height: 1.05;
+    margin: 0 0 0.6rem;
+  }
+
+  header h1 span { color: var(--caution); }
+
+  .tagline {
+    color: var(--dim);
+    margin: 0 0 2rem;
+    font-size: 1rem;
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .btn {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 0.8em 1.4em;
+    border-radius: 3px;
+    border: 1px solid var(--caution);
+    background: var(--caution);
+    color: var(--ink);
+  }
+
+  .btn:hover { background: var(--caution-dark); border-color: var(--caution-dark); }
+
+  .btn.ghost {
+    background: transparent;
+    color: var(--dim);
+    border-color: var(--rule);
+    font-weight: 400;
+  }
+
+  .btn.ghost:hover { color: var(--caution); border-color: var(--caution); }
+
+  .urlbar {
+    margin: 0 0 3rem;
+    color: var(--dim);
+    font-size: 0.8rem;
+    word-break: break-all;
+  }
+
+  .urlbar code { color: var(--caution-dark); }
+
+  h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+    color: var(--paper);
+    margin: 3.5rem 0 0.4rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  h2:first-of-type { margin-top: 2.5rem; }
+
+  h3 {
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--caution);
+    margin: 2rem 0 0.4rem;
+    font-weight: 600;
+  }
+
+  p { margin: 0.9rem 0; }
+
+  a { color: var(--caution); }
+
+  strong { color: var(--paper); font-weight: 600; }
+
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.1em 0.4em;
+    font-size: 0.88em;
+    color: var(--paper);
+  }
+
+  pre {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--caution);
+    border-radius: 3px;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--paper);
+  }
+
+  pre code { background: none; border: none; padding: 0; font-size: inherit; }
+
+  ol, ul { padding-left: 1.3rem; margin: 0.9rem 0; }
+  li { margin: 0.45rem 0; }
+  li::marker { color: var(--caution-dark); }
+
+  kbd {
+    display: inline-block;
+    min-width: 2.1em;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--caution);
+    border-radius: 3px;
+    padding: 0.15em 0.5em;
+    box-shadow: 0 2px 0 var(--caution-dark);
+  }
+
+  .scroll { overflow-x: auto; margin: 1.2rem 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+    min-width: 30rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+
+  th {
+    color: var(--caution);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom-color: var(--caution-dark);
+  }
+
+  td:first-child { white-space: nowrap; }
+
+  tbody tr:hover { background: rgba(245, 179, 1, 0.04); }
+
+  .note {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--caution);
+    border-radius: 3px;
+    padding: 1rem 1.2rem;
+    margin: 1.4rem 0;
+  }
+
+  .note p { margin: 0.4rem 0; }
+  .note p:first-child { margin-top: 0; }
+  .note p:last-child { margin-bottom: 0; }
+
+  .note.warn { border-left-color: var(--alert); }
+
+  .note .label {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--caution);
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+  }
+
+  .note.warn .label { color: #ef6a7c; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+    color: var(--dim);
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 640px) {
+    body { font-size: 14px; }
+    .wrap { padding: 2.5rem 1.1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stripe"></div>
+
+<div class="wrap">
+
+<header>
+  <h1>Tech <span>Notice</span></h1>
+  <p class="tagline">A do-not-touch sign for machines you're servicing — that also keeps the screen awake.</p>
+
+  <div class="cta">
+    <a class="btn" href="tech-working.html">Open the sign</a>
+    <a class="btn ghost" href="#shortcuts">Keyboard shortcuts</a>
+  </div>
+  <p class="urlbar">Sign: <code>eharel.github.io/tech-notice/tech-working.html</code> &nbsp;·&nbsp; This guide: <code>eharel.github.io/tech-notice</code></p>
+</header>
+
+<h2>What it's for</h2>
+
+<p>When you're reimaging or updating a room full of machines, two things keep going wrong: the screen sleeps mid-job, and someone wanders up and starts using the computer you're halfway through. This page solves both. Open it on the machine, press <kbd>F</kbd>, walk away.</p>
+
+<p>It replaces the old tricks — a 24-hour YouTube video for the sleep problem, a Notepad window reading "DO NOT TOUCH" for the people problem.</p>
+
+<h2>Quick start</h2>
+
+<ol>
+  <li>Open <a href="tech-working.html">the sign</a> on the machine you're working on.</li>
+  <li>Press <kbd>C</kbd> and fill in your name, extension, and what you're doing. Hit <strong>Apply</strong>.</li>
+  <li>Press <kbd>F</kbd> for full screen, then get on with the job.</li>
+</ol>
+
+<p>Once you've set it up, bookmark the link the settings panel gives you. That bookmark carries your name and number with it, so next time it's just: open bookmark, press <kbd>F</kbd>, walk away.</p>
+
+<h2 id="shortcuts">Keyboard shortcuts</h2>
+
+<p>The sign is deliberately bare — it's meant to look like a sign, not an app. Everything is on the keyboard, with one dim <strong>?</strong> in the top-right corner as the way in.</p>
+
+<div class="scroll">
+<table>
+  <thead>
+    <tr><th>Key</th><th>What it does</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><kbd>C</kbd></td><td>Open the settings panel — name, number, what you're working on</td></tr>
+    <tr><td><kbd>F</kbd></td><td>Go full screen</td></tr>
+    <tr><td><kbd>?</kbd> or <kbd>H</kbd></td><td>Show the shortcut card, with a link to this guide</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>Close whichever panel is open; leaves full screen the way it always does</td></tr>
+    <tr><td>anything else</td><td>Triggers the <strong>Hands off</strong> warning — that's the point</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>When the page loads, the shortcuts are spelled out in dim text in the top-right corner. After about eight seconds that line fades and collapses to a single faint <strong>?</strong>, so a passer-by isn't reading instructions off the sign — but there's still a visible way in for the next person who walks up.</p>
+
+<p>Press <kbd>?</kbd> or click that corner mark and you get a card with the shortcut list and a link to this guide. The card is drawn in the page rather than opened in a tab, so it works even where popups are blocked. The <strong>?</strong> is the only thing on the sign you can click without setting off the warning.</p>
+
+<h2>The settings panel</h2>
+
+<p><kbd>C</kbd> opens it. While it's open the sign behaves normally — typing in the fields won't set off the warning or throw you into full screen.</p>
+
+<div class="scroll">
+<table>
+  <thead>
+    <tr><th>Field</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Technician name</td>
+      <td>Shows on the sign and in the warning screen.</td>
+    </tr>
+    <tr>
+      <td>Extension</td>
+      <td>The <code>(970) 947-</code> part is fixed — type only your last four digits. Non-digits are ignored.</td>
+    </tr>
+    <tr>
+      <td>Different number</td>
+      <td>Optional. Anything you type here <strong>replaces</strong> the extension entirely — a cell, the help desk, whatever. Free-form, no formatting rules.</td>
+    </tr>
+    <tr>
+      <td>Work being done</td>
+      <td>Replaces the footer text. Leave it blank and it stays <em>Reimage / setup in progress</em>.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>The result reads, in caution yellow under the main message:</p>
+
+<pre><code>Need this machine? Contact Eli Harel · (970) 947-4821</code></pre>
+
+<p>Leave everything blank and the contact line simply doesn't appear — the sign looks exactly as it did before anyone configured it.</p>
+
+<h2>Your settings live in the link</h2>
+
+<p>There's no account, no database, nothing saved to the machine. Your settings are stored in the page's web address, which is the whole trick: a bookmark carries them, and a bookmark syncs to every machine you sign into.</p>
+
+<p>When you hit <strong>Apply</strong>, the address bar updates to match. <kbd>Ctrl</kbd>+<kbd>D</kbd> right then and you're done. The panel also shows the full link with a <strong>Copy</strong> button, which is the one to use if you want to hand your setup to someone else — or if the address bar didn't update (it won't on some setups, and the Copy box always has the right link).</p>
+
+<h3>Parameter reference</h3>
+
+<div class="scroll">
+<table>
+  <thead>
+    <tr><th>Parameter</th><th>Meaning</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>tech</code></td><td>Technician name</td></tr>
+    <tr><td><code>contact</code></td><td>The finished, formatted number</td></tr>
+    <tr><td><code>task</code></td><td>Footer text; omitted means the default</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code>tech-working.html?tech=Eli%20Harel&amp;contact=(970)%20947-4821&amp;task=Windows%2011%20reimage</code></pre>
+
+<p>You can hand-edit these if you like, but the panel is easier and gets the escaping right. Reopening the panel reads them back in — a number in <code>(970) 947-XXXX</code> form returns to the four-digit box, anything else lands in the "different number" field.</p>
+
+<h2>What someone sees when they touch it</h2>
+
+<p>Any click or keypress that isn't one of the shortcuts flips the screen to a full-bleed red panel that pulses between two shades of red:</p>
+
+<pre><code>HANDS OFF
+
+This computer is mid-service. Typing, clicking, or restarting it
+can break the install and start the job over.
+
+Contact Eli Harel · (970) 947-4821</code></pre>
+
+<p>It clears itself after six seconds. Every new poke restarts that six seconds, so someone who keeps mashing keys keeps getting the sign. Your contact details show up here too — this is the moment someone actually wants to know who to call.</p>
+
+<div class="note">
+  <span class="label">Heads up</span>
+  <p>While the red warning is up it covers everything, including the settings panel's normal entry point. If you walk up to a machine that's mid-warning, just press <kbd>C</kbd> — the shortcut clears the warning and opens settings in one go.</p>
+</div>
+
+<h2>Keeping the screen awake</h2>
+
+<p>The page asks the browser for a screen wake lock as soon as it loads, and asks again whenever the tab becomes visible after being hidden. That's the same mechanism a video player uses, minus the video.</p>
+
+<p>What that does and doesn't cover:</p>
+
+<ul>
+  <li><strong>Does:</strong> keeps the display from blanking or dimming while the tab is visible.</li>
+  <li><strong>Doesn't:</strong> stop a scheduled restart, a sleep policy pushed from management, or the machine suspending because the lid closed.</li>
+  <li><strong>Needs the tab in front.</strong> Minimize it or bury it behind other windows and the browser can drop the lock. It re-requests when it comes back, but full screen is the reliable move.</li>
+  <li><strong>Needs a secure page.</strong> Loaded over <code>https://</code> from the link above, you're fine. Some other ways of opening the file won't get a wake lock, and the page won't complain — it just quietly doesn't hold one.</li>
+</ul>
+
+<div class="note warn">
+  <span class="label">Known gap</span>
+  <p>If the wake lock is refused, nothing on screen tells you. The sign looks correct and the machine sleeps anyway. Until there's a status indicator, the safe habit is: use the <code>https://</code> link, and go full screen.</p>
+</div>
+
+<h2>The clock and timer</h2>
+
+<p>The footer shows the current time and an elapsed counter. <strong>Elapsed counts from when the page loaded</strong>, not from when the job started — reload the page and it starts over. Treat it as "how long has this sign been up," which is usually the number you want anyway when you're circling back through a lab.</p>
+
+<h2>Troubleshooting</h2>
+
+<div class="scroll">
+<table>
+  <thead>
+    <tr><th>Symptom</th><th>Likely cause</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Machine slept anyway</td>
+      <td>Tab wasn't in front, page wasn't loaded over <code>https://</code>, or a power policy overrode it. Go full screen and use the real link.</td>
+    </tr>
+    <tr>
+      <td>Settings vanished</td>
+      <td>You bookmarked the plain address instead of the one from the panel. Press <kbd>C</kbd>, Apply, then bookmark.</td>
+    </tr>
+    <tr>
+      <td>Address bar didn't change on Apply</td>
+      <td>Harmless — some contexts block it. Use the Copy button in the panel.</td>
+    </tr>
+    <tr>
+      <td>Nothing happens on <kbd>C</kbd></td>
+      <td>The page needs focus. Click the page once (you'll get the warning — that's fine, it clears) and try again.</td>
+    </tr>
+    <tr>
+      <td>Sign is gone entirely</td>
+      <td>The machine rebooted into the imaging process. Expected — reopen it when it comes back up.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2>For whoever maintains this</h2>
+
+<p>Two files, no build step, no dependencies beyond a Google Fonts link. <code>tech-working.html</code> is the sign; <code>index.html</code> is this guide. Push to <code>main</code> and GitHub Pages serves it.</p>
+
+<p>Adding a setting is four small edits in <code>tech-working.html</code>:</p>
+
+<ol>
+  <li>Read the new parameter in <code>readSettings()</code></li>
+  <li>Paint it in <code>render()</code></li>
+  <li>Add the field to the form</li>
+  <li>Add a <code>p.set()</code> line in <code>urlFromFields()</code></li>
+</ol>
+
+<p>Everything from the URL goes onto the page via <code>textContent</code>, never <code>innerHTML</code> — keep it that way, since anyone can hand anyone else a link.</p>
+
+<footer>
+  Tech Notice · <a href="https://github.com/eharel/tech-notice">github.com/eharel/tech-notice</a> · Press <kbd>?</kbd> on the sign for the shortcut card, which links back here.
+</footer>
+
+</div>
+
+</body>
+</html>
